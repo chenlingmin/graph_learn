@@ -1,3 +1,7 @@
+package com.chenlm.dfs;
+
+import com.chenlm.Graph;
+
 import java.util.ArrayList;
 
 public class GraphDFS {

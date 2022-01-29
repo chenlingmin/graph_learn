@@ -1,31 +1,49 @@
-import java.util.ArrayList;
+package com.chenlm.bfs;
 
-// Connected Component
+import com.chenlm.Graph;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class CC {
 
     private Graph G;
     private int[] visited;
+    private int cccount;
 
-    private int cccount = 0;
+    private ArrayList<Integer> order = new ArrayList<>();
 
     public CC(Graph G) {
         this.G = G;
         visited = new int[G.V()];
-        for (int i = 0; i < visited.length; i++) {
+
+        for (int i = 0; i < G.V(); i++) {
             visited[i] = -1;
         }
+
         for (int v = 0; v < G.V(); v++)
             if (visited[v] == -1) {
-                dfs(v, cccount);
+                bfs(v);
                 cccount++;
             }
+
     }
 
-    private void dfs(int v, int ccid) {
-        visited[v] = ccid;
-        for (Integer w : G.adj(v))
-            if (visited[w] == -1)
-                dfs(w, ccid);
+    private void bfs(int s) {
+        Queue<Integer> queue = new LinkedList<>();
+
+        queue.add(s);
+        visited[s] = cccount;
+        while (!queue.isEmpty()) {
+            int v = queue.remove();
+            order.add(v);
+            for (int w : G.adj(v))
+                if (visited[w] == -1) {
+                    queue.add(w);
+                    visited[w] = cccount;
+                }
+        }
     }
 
     public int cccount() {
@@ -54,7 +72,7 @@ public class CC {
 
     public static void main(String[] args) {
         Graph g = new Graph("g.txt");
-        CC cc = new CC(g);
+        com.chenlm.dfs.CC cc = new com.chenlm.dfs.CC(g);
         System.out.println(cc.cccount());
 
         System.out.println(cc.isConnected(0, 6));
@@ -69,4 +87,5 @@ public class CC {
             System.out.println();
         }
     }
+
 }

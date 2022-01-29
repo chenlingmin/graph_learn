@@ -1,15 +1,17 @@
+package com.chenlm;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.TreeSet;
 
-public class Graph {
+public class AdjSet {
 
     private int V;
     private int E;
     private TreeSet<Integer>[] adj;
 
-    public Graph(String filename) {
+    public AdjSet(String filename) {
         File file = new File(filename);
         try (Scanner scanner = new Scanner(file)) {
             V = scanner.nextInt();
@@ -37,7 +39,7 @@ public class Graph {
         }
     }
 
-     public void validateVertex(int v) {
+    private void validateVertex(int v) {
         if (v < 0 || v >= V)
             throw new IllegalArgumentException("vertex " + v + "is invalid");
     }
@@ -82,7 +84,7 @@ public class Graph {
     }
 
     public static void main(String[] args) {
-        Graph graph = new Graph("g.txt");
-        System.out.println(graph);
+        AdjSet adjSet = new AdjSet("g.txt");
+        System.out.println(adjSet);
     }
 }

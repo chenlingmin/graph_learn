@@ -1,3 +1,6 @@
+package com.chenlm.dfs;
+
+import com.chenlm.Graph;
 
 // 二分图检测
 public class BipartitionDetection {

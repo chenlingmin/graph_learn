@@ -1,4 +1,9 @@
+package com.chenlm.bfs;
 
+import com.chenlm.Graph;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class CycleDetection {
 
@@ -7,25 +12,35 @@ public class CycleDetection {
     private boolean hasCycle;
 
     public CycleDetection(Graph G) {
-
         this.G = G;
         visited = new boolean[G.V()];
-        for (int v = 0; v < G.V(); v++) {
+
+        for (int v = 0; v < G.V(); v++)
             if (!visited[v])
-                if (dfs(v, v)) {
+                if (bfs(v)) {
                     hasCycle = true;
                     break;
                 }
-        }
     }
 
-    private boolean dfs(int v, int parent) {
-        visited[v] = true;
-        for (Integer w : G.adj(v))
-            if (!visited[w]) {
-                if (dfs(w, v)) return true;
-            } else if (w != parent)
-                return true;
+    private boolean bfs(int s) {
+        Queue<Integer> queue = new LinkedList<>();
+
+        queue.add(s);
+        queue.add(s);
+        visited[s] = true;
+        while (!queue.isEmpty()) {
+            int v = queue.remove();
+            int vparent = queue.remove();
+            for (int w : G.adj(v))
+                if (!visited[w]) {
+                    queue.add(w);
+                    queue.add(v);
+                    visited[w] = true;
+                } else if (w != vparent) {
+                    return true;
+                }
+        }
         return false;
     }
 
@@ -42,4 +57,5 @@ public class CycleDetection {
         CycleDetection cycleDetection2 = new CycleDetection(g2);
         System.out.println(cycleDetection2.hasCycle());
     }
+
 }
