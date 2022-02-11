@@ -4,19 +4,21 @@ package com.chenlm.hamilton;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class HamiltonLoop {
+public class HamiltonPath {
 
     private Graph G;
     private boolean[] visited;
     private int[] pre;
     private int end;
+    private int s;
 
-    public HamiltonLoop(Graph G) {
+    public HamiltonPath(Graph G, int s) {
         this.G = G;
         visited = new boolean[G.V()];
         pre = new int[G.V()];
+        this.s = s;
         end = -1;
-        dfs(0, 0, G.V());
+        dfs(s, s, G.V());
     }
 
     private boolean dfs(int v, int parent, int left) {
@@ -24,7 +26,7 @@ public class HamiltonLoop {
         pre[v] = parent;
         left--;
 
-        if (left == 0 && G.hasEdge(v, 0)) {
+        if (left == 0 ) {
             end = v;
             return true;
         }
@@ -50,22 +52,26 @@ public class HamiltonLoop {
         if (end == -1) return res;
 
         int cur = end;
-        while (cur != 0) {
+        while (cur != s) {
             res.add(cur);
             cur = pre[cur];
         }
-        res.add(0);
+        res.add(s);
         Collections.reverse(res);
         return res;
     }
 
     public static void main(String[] args) {
-        Graph g = new Graph("resources/hamilton/g.txt");
-        HamiltonLoop hamiltonLoop = new HamiltonLoop(g);
+        Graph g = new Graph("resources/hamilton/g3.txt");
+        HamiltonPath hamiltonLoop = new HamiltonPath(g, 1);
         System.out.println(hamiltonLoop.result());
 
-        Graph g2 = new Graph("resources/hamilton/g2.txt");
-        HamiltonLoop hamiltonLoop2 = new HamiltonLoop(g2);
+        Graph g1 = new Graph("resources/hamilton/g3.txt");
+        HamiltonPath hamiltonLoop1 = new HamiltonPath(g1, 2);
+        System.out.println(hamiltonLoop1.result());
+
+        Graph g2 = new Graph("resources/hamilton/g3.txt");
+        HamiltonPath hamiltonLoop2 = new HamiltonPath(g2, 0);
         System.out.println(hamiltonLoop2.result());
     }
 }
