@@ -7,20 +7,23 @@ import java.util.Collections;
 public class HamiltonLoop {
 
     private Graph G;
-    private boolean[] visited;
+    //    private boolean[] visited;
+//    private int visited;
     private int[] pre;
     private int end;
 
     public HamiltonLoop(Graph G) {
         this.G = G;
-        visited = new boolean[G.V()];
+//        visited = new boolean[G.V()];
+        int visited = 0;
         pre = new int[G.V()];
         end = -1;
-        dfs(0, 0, G.V());
+        dfs(visited, 0, 0, G.V());
     }
 
-    private boolean dfs(int v, int parent, int left) {
-        visited[v] = true;
+    private boolean dfs(int visited, int v, int parent, int left) {
+        visited += 1 << v;
+//        visited[v] = true;
         pre[v] = parent;
         left--;
 
@@ -30,11 +33,12 @@ public class HamiltonLoop {
         }
 
         for (int w : G.adj(v)) {
-            if (!visited[w]) {
-                if (dfs(w, v, left)) return true;
+//            if (!visited[w]) {
+            if ((visited & (1 << w)) == 0) {
+                if (dfs(visited, w, v, left)) return true;
             }
         }
-        visited[v] = false;
+//        visited -= 1 << v;
         return false;
     }
 
