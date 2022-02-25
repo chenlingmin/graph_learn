@@ -1,6 +1,8 @@
 package com.chenlm.minpath;
 
 import java.util.Arrays;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class Dijkstra {
 
@@ -8,6 +10,20 @@ public class Dijkstra {
     private int s;
     private int[] dis;
     private boolean[] visited;
+
+    private class Node implements Comparable<Node> {
+        public int v, dis;
+
+        Node(int v, int dis) {
+            this.v = v;
+            this.dis = dis;
+        }
+
+        @Override
+        public int compareTo(Node other) {
+            return dis - other.dis;
+        }
+    }
 
     public Dijkstra(WeightedGraph G, int s) {
         this.G = G;
@@ -21,17 +37,11 @@ public class Dijkstra {
 
         visited = new boolean[G.V()];
 
-        while (true) {
-            int curdis = Integer.MAX_VALUE, cur = -1;
-
-            for (int v = 0; v < G.V(); v++) {
-                if (!visited[v] && dis[v] < curdis) {
-                    curdis = dis[v];
-                    cur = v;
-                }
-            }
-
-            if (cur == -1) break;
+        Queue<Node> pq = new PriorityQueue<>();
+        pq.add(new Node(s, 0));
+        while (!pq.isEmpty()) {
+            int cur = pq.remove().v;
+            if (visited[cur]) continue;
 
             visited[cur] = true;
 
@@ -39,8 +49,10 @@ public class Dijkstra {
                 if (!visited[w]) {
 //                    if (dis[cur] + G.getWeight(cur, w) < dis[w]) {
 //                        dis[w] = dis[cur] + G.getWeight(cur, w);
+//                        pq.add(new Node(w, dis[w]));
 //                    }
-                    dis[w] = Math.min(dis[w], curdis + G.getWeight(cur, w));
+                    dis[w] = Math.min(dis[w], dis[cur] + G.getWeight(cur, w));
+                    pq.add(new Node(w, dis[w]));
                 }
             }
         }
