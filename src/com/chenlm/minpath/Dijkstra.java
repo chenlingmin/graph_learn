@@ -1,8 +1,6 @@
 package com.chenlm.minpath;
 
-import java.util.Arrays;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 public class Dijkstra {
 
@@ -10,6 +8,7 @@ public class Dijkstra {
     private int s;
     private int[] dis;
     private boolean[] visited;
+    private int[] pre;
 
     private class Node implements Comparable<Node> {
         public int v, dis;
@@ -33,7 +32,13 @@ public class Dijkstra {
 
         this.dis = new int[G.V()];
         Arrays.fill(dis, Integer.MAX_VALUE);
+
+        this.pre = new int[G.V()];
+        Arrays.fill(pre, -1);
+
+
         dis[s] = 0;
+        pre[s] = s;
 
         visited = new boolean[G.V()];
 
@@ -47,12 +52,13 @@ public class Dijkstra {
 
             for (int w : G.adj(cur)) {
                 if (!visited[w]) {
-//                    if (dis[cur] + G.getWeight(cur, w) < dis[w]) {
-//                        dis[w] = dis[cur] + G.getWeight(cur, w);
-//                        pq.add(new Node(w, dis[w]));
-//                    }
-                    dis[w] = Math.min(dis[w], dis[cur] + G.getWeight(cur, w));
-                    pq.add(new Node(w, dis[w]));
+                    if (dis[cur] + G.getWeight(cur, w) < dis[w]) {
+                        dis[w] = dis[cur] + G.getWeight(cur, w);
+                        pq.add(new Node(w, dis[w]));
+                        pre[w] = cur;
+                    }
+//                    dis[w] = Math.min(dis[w], dis[cur] + G.getWeight(cur, w));
+//                    pq.add(new Node(w, dis[w]));
                 }
             }
         }
@@ -65,8 +71,22 @@ public class Dijkstra {
 
     public int distTo(int v) {
         G.validateVertex(v);
-
         return dis[v];
+    }
+
+    public Iterable<Integer> path(int t) {
+        ArrayList<Integer> res = new ArrayList<>();
+        if (!isConnectedTo(t)) return res;
+
+        int cur = t;
+        while (cur != s) {
+            res.add(cur);
+            cur = pre[cur];
+        }
+        res.add(s);
+
+        Collections.reverse(res);
+        return res;
     }
 
     public static void main(String[] args) {
@@ -76,6 +96,10 @@ public class Dijkstra {
         for (int v = 0; v < g.V(); v++)
             System.out.print(dijkstra.distTo(v) + " ");
         System.out.println();
+
+        System.out.println(dijkstra.path(3));
+
+
     }
 
 
